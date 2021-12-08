@@ -1,0 +1,5 @@
+Key Store Path : E:\Apps/Cser2020\Android\key.jks
+Pass: anhyeuem
+Alias key0 hoac key1
+Pass: anhyeuem
+Link release :  E:\Apps\Cser2020\Android\app\release

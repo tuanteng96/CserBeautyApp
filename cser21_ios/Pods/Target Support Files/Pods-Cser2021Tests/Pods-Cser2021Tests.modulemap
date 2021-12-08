@@ -1,0 +1,6 @@
+framework module Pods_Cser2021Tests {
+  umbrella header "Pods-Cser2021Tests-umbrella.h"
+
+  export *
+  module * { export * }
+}
