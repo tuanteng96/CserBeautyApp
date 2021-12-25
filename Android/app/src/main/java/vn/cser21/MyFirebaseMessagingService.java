@@ -13,12 +13,17 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Map;
+import java.util.Random;
+
+import me.leolin.shortcutbadger.ShortcutBadger;
+
 //https://github.com/jirawatee/FirebaseCloudMessaging-Android/blob/master/app/src/main/java/com/example/fcm/MyFirebaseMessagingService.java
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
@@ -36,9 +41,20 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         // message, here is where that should be initiated. See sendNotification method below.
         RemoteMessage.Notification notification = remoteMessage.getNotification();
         Map<String, String> data = remoteMessage.getData();
+        int badgeCount = Integer.parseInt(data.get("badge").toString());
+
+        try {
+            if(remoteMessage.getData().size() > 0) {
+                ShortcutBadger.applyCount(getApplicationContext(), badgeCount);
+            }
+        } catch (Exception e) {
+            Log.e("TAG", "onMessageReceived: ", e);
+        }
+        if(remoteMessage.getNotification() != null) {
+            ShortcutBadger.applyCount(getApplicationContext(), badgeCount);
+        }
 
         sendNotification(notification, data);
-
     }
 
 
@@ -72,7 +88,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
 
 
-        PendingIntent pendingIntent =  PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent =  PendingIntent.getActivity(this, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, "channel_id")
                 .setContentTitle(notification.getTitle())
@@ -83,9 +99,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 .setContentInfo(notification.getTitle())
                 .setLargeIcon(icon)
                 //.setColor(Color.RED)
+                //.setNumber(badgeCount)
                 .setLights(Color.RED, 1000, 300)
                 .setDefaults(Notification.DEFAULT_VIBRATE)
                 .setSmallIcon(R.mipmap.ic_launcher);
+
+
 
         //data -> customize -> display noti
         //1
@@ -178,7 +197,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             channel.setVibrationPattern(new long[]{100, 200, 300, 400, 500});
             notificationManager.createNotificationChannel(channel);
         }
-
-        notificationManager.notify(001, notificationBuilder.build());
+        Random notification_id = new Random();
+        notificationManager.notify(notification_id.nextInt(100), notificationBuilder.build());
     }
+
 }

@@ -610,14 +610,14 @@ class ViewController: UIViewController,WKScriptMessageHandler,UIGestureRecognize
             ios11()
             //!gay loi khi chay trn ipad, ko dc duyet
             //UIApplication.shared.statusBarView?.backgroundColor = #colorLiteral(red: 0, green: 0.3529411765, blue: 0.5882352941, alpha: 1)
-            UIApplication.shared.statusBarUIView?.backgroundColor = #colorLiteral(red: 0.7254901961, green: 0.5921568627, blue: 0.2745098039, alpha: 1)
+            UIApplication.shared.statusBarUIView?.backgroundColor = #colorLiteral(red: 1, green: 0.537254902, blue: 0.5529411765, alpha: 1)
         }else{
             // for ex. UIStackView
             ios10()
             
             //!gay loi khi chay trn ipad, ko dc duyet
             //UIApplication.shared.statusBarView?.backgroundColor = #colorLiteral(red: 0, green: 0.3529411765, blue: 0.5882352941, alpha: 1)
-            UIApplication.shared.statusBarUIView?.backgroundColor = #colorLiteral(red: 0.7254901961, green: 0.5921568627, blue: 0.2745098039, alpha: 1)
+            UIApplication.shared.statusBarUIView?.backgroundColor = #colorLiteral(red: 1, green: 0.537254902, blue: 0.5529411765, alpha: 1)
         }
        
     }

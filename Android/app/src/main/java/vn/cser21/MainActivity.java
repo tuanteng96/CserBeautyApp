@@ -821,7 +821,6 @@ public class MainActivity extends AppCompatActivity {
             return "This is ANDROID";
         }
 
-
     }
 
 

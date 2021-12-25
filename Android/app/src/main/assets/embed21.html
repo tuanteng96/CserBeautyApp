@@ -5,9 +5,8 @@
     <meta name="viewport" content="width=device-width initial-scale=1.0 maximum-scale=1.0 user-scalable=yes" />
     <title></title>
     <meta http-equiv="Content-Language" content="vi" />
-    <link rel="stylesheet"
-          href="file:///android_asset/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
 
+    <link rel="stylesheet" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css" />
     <style type="text/css">
         *, ::after, ::before {
             box-sizing: border-box;
@@ -31,98 +30,44 @@
             overflow:hidden
         }
 
-        #DOT {
-            position: relative;
-            display: inline-block
-        }
-
-            #DOT:after {
-                display: inline-block;
-                position: absolute;
-                content: attr(data-dot);
-                display: inline-block;
-            }
-
-        #ANDROID_ONBACK_MESS {
-            z-index: 9999;
-            position: fixed;
-            top: auto;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            padding: 30px;
-            text-align: center;
-            background: #fff;
-            box-shadow: 0 0 3px 0 rgba(0,0,0,0.5);
-            display: none
-        }
-    </style>
-
-    <style>
-        .splash {
-            width: 100%;
-            height: 100%;
-            position:relative
-        }
-
-        .splash-inner {
-            --w--: 56px;
-            width: var(--w--);
-        }
-
-
-
-        .splash-loader {
-            height: 8px;
-            display: flex;
-            justify-content: space-between;
-            width: 34px;
-            margin: 8px auto 0;
-            position:fixed;
-            bottom:30vh;
-            left:0; right:0;
-        }
-
-            .splash-loader span {
-                width: 8px;
-                height: 8px;
-                border-radius: 50%;
-                background-color: #f9f9f9;
-                display: none;
-                animation: dot-flashing 1s infinite linear alternate;
-            }
-
-                .splash-loader span:nth-child(1),
-                .splash-loader span:nth-child(2),
-                .splash-loader span:nth-child(3) {
-                    display: flex
+        #preload {
+                    position:fixed;
+                    top: 0;
+                    width:100%;
+                    height:100%;
+                    opacity:1;
+                    z-index:100001;
+                    background:#ff898d
+                }
+                 #preload img {
+                    width: 200px;
+                     max-width: 90%;
+                     position: absolute;
+                     top: calc(50% - 25px);
+                     left: 50%;
+                     transform: translateX(-50%) translateY(-50%);
+                }
+                 #preload .progress {
+                    position: absolute;
+                     left: 50%;
+                     bottom: 50px;
+                     width: 80%;
+                     height: 4px;
+                     background: rgba(255,255,255,0.5);
+                     border-radius: 10px;
+                     transform: translateX(-50%);
+                     overflow: hidden;
+                }
+                 #preload .progress .progress-line {
+                     width: auto;
+                     height: 4px;
+                     background: #fff;
+                     position: absolute;
+                     top: 0;
+                     left: 0;
+                     transition: width .6s ease;
                 }
 
-                .splash-loader span:nth-child(1) {
-                    animation-delay: 0s;
-                }
-
-                .splash-loader span:nth-child(2) {
-                    animation-delay: .5s;
-                }
-
-                .splash-loader span:nth-child(3) {
-                    animation-delay: 1s;
-                }
-        .LOADER21{
-            position:fixed;
-            bottom:0;
-            left:0; right:0; padding:2rem; font-size:11px; color:#bbb; text-align:center; display:none
-        }
-        @keyframes dot-flashing {
-            0%, 50% {
-                background-color: #f9f9f9;
-            }
-
-            100% {
-                background-color: #444;
-            }
-        }
     </style>
 
     <style>
@@ -152,15 +97,47 @@
 </head>
 <body>
 
-<!--<div class="splash">-->
-<!--    <div class="splash-inner">-->
-<!--        <div class="splash-icon"></div>-->
-<!--        <div class="splash-loader"><span></span><span></span><span></span><span></span><span></span></div>-->
-<!--    </div>-->
-<!--</div>-->
-<div class="LOADER21"></div>
+<div id="preload">
+    <div class="progress-logo">
+        <img src="https://cser.vn/app/images/logo-app.png">
+    </div>
+    <div class="progress">
+        <div class="progress-line">
+        </div>
+    </div>
+</div>
+    <script>
+        var timerId, percent, hideLoader;
+        percent = 0;
+        hideLoader = false;
+        window.onload = function() {
 
-<script type="text/javascript">
+            var preload = document.getElementById("preload");
+            var progressLine = document.getElementsByClassName("progress-line")[0];
+
+            timerId = setInterval(function () {
+
+                if(percent > 40 && !hideLoader) {
+                    percent += 0.5;
+                }
+                else {
+                    percent += 2;
+                }
+
+                // increment progress bar
+                progressLine.style.width = percent + "%";
+
+                // complete
+
+                if (percent >= 100) {
+                    clearInterval(timerId);
+                    hideLoader = true;
+                    preload.remove();
+                }
+
+            }, 300);
+        }
+
         var PREV_ERROR = false;
         function ERROR() {
             PREV_ERROR = true;
@@ -238,14 +215,14 @@
 
         }
 
-        function CLEAR_LOADER() {
+        /* function CLEAR_LOADER() {
             ['.splash','.LOADER21'].forEach(function (el) {
                 box(() => {
                     document.querySelector(el).remove();
                 })
             })
 
-        }
+        } */
 
         /*
          Step1: SCRIPT_START
@@ -266,16 +243,17 @@
             var link = 'https://cser.vn/app2021/index.aspx';
             var N = 5;
             var isShowLoader = false;
-            var showLoaderInv = setTimeout(function () {
+
+            /* var showLoaderInv = setTimeout(function () {
                 isShowLoader = true;
-            }, 1000);
+            }, 1000); */
 
             function countDown() {
-                LOADER21.innerHTML = "disconnected! try again after(" + N + 's)';
-                document.body.setAttribute('data-status', 'COUNTDOWN');
+                /* LOADER21.innerHTML = "disconnected! try again after(" + N + 's)';
+                document.body.setAttribute('data-status', 'COUNTDOWN'); */
 
 
-                if (N == 0) {
+                /* if (N == 0) {
                     COUNTDOWN(N);
                     get();
                 } else {
@@ -284,10 +262,10 @@
                         COUNTDOWN(N);
                         countDown();
                     }, 1000);
-                }
+                } */
             }
             function init(script) {
-                clearTimeout(showLoaderInv);
+                /* clearTimeout(showLoaderInv); */
                 if (!isShowLoader) {
                     __embedJs(script);
 
@@ -306,19 +284,19 @@
                 if (script) {
                     init(script);
                 } else {
-                    setTimeout(function () {
+                    /* setTimeout(function () {
                         LOADER21.innerHTML = "disconnected! try again...";
                         document.body.setAttribute('data-status', 'BEGIN');
                         N = 5;
                         countDown();
 
-                    }, 1000);
+                    }, 1000); */
                 }
             }
 
             function get() {
-                LOADER21.innerHTML =  "connecting...";
-                document.body.setAttribute('data-status', 'CONNECTING');
+                /* LOADER21.innerHTML =  "connecting...";
+                document.body.setAttribute('data-status', 'CONNECTING'); */
                 fetch(link)
                     .then((data) => {
 

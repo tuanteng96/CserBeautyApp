@@ -1,9 +1,13 @@
 package vn.cservn2020;
 
+import static android.support.v4.content.ContextCompat.getSystemService;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -19,6 +23,7 @@ import android.os.Environment;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.provider.MediaStore;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.FileProvider;
 import android.telephony.SmsManager;
 import android.telephony.TelephonyManager;
@@ -44,6 +49,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import me.leolin.shortcutbadger.ShortcutBadger;
 
 public class App21 {
     Context mContext;
@@ -250,6 +257,14 @@ public class App21 {
         App21Result(rs);
 
 
+    }
+
+    void SET_BADGE(final Result result ) {
+        Result rs = result.copy();
+        rs.success = true;
+//        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(mContext.getApplicationContext(), "channel_id").setNumber(10);
+//        ShortcutBadger.applyCount(mContext.getApplicationContext(), 10);
+        App21Result(rs);
     }
 
     void BASE64(final Result result) {

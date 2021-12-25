@@ -31,6 +31,9 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'com.google.android.gms:play-services-location:15.0.1'
 
+    implementation "me.leolin:ShortcutBadger:1.1.22@aar"
+
+
 
 }
 apply plugin: 'com.google.gms.google-services'
