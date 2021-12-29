@@ -103,6 +103,24 @@ class App21 : NSObject
         }
     }
     
+    //MARK: - SET_BAGDE
+    @objc func SET_BADGE(result: Result) -> Void
+    {
+        DispatchQueue.main.async {
+                UIApplication.shared.applicationIconBadgeNumber -= 1
+        }
+            
+    }
+    
+    //MARK: - SET_BAGDE
+    @objc func REMOVE_BADGE(result: Result) -> Void
+    {
+        DispatchQueue.main.async {
+                UIApplication.shared.applicationIconBadgeNumber = 0
+        }
+            
+    }
+    
     //MARK: - REBOOT
     @objc func REBOOT(result: Result) -> Void {
         //
