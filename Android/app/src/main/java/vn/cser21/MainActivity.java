@@ -51,6 +51,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import me.leolin.shortcutbadger.ShortcutBadger;
+
 /*
 Thay đổi cấu hình cho từng app
 bao gồm:
@@ -249,6 +251,13 @@ public class MainActivity extends AppCompatActivity {
         //go
         super.onCreate(savedInstanceState);
 
+        //Tránh Reload Backgroud
+        if (!isTaskRoot() && (getIntent().hasCategory(Intent.CATEGORY_LAUNCHER) || getIntent().hasCategory(   Intent.CATEGORY_INFO))
+                && Intent.ACTION_MAIN.equals(getIntent().getAction())){
+            finish();
+            return;
+        }
+
         if (Build.VERSION.SDK_INT >= 23 && (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)) {
             // Ẩn để gọi động
             //  ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 1);
@@ -265,7 +274,6 @@ public class MainActivity extends AppCompatActivity {
 
         //Luôn để mầu trắng
         //setBackground(null);
-
 
         wv.addJavascriptInterface(ANDROID, "ANDROID");
 

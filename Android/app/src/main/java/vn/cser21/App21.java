@@ -6,6 +6,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -17,6 +18,8 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -251,8 +254,6 @@ public class App21 {
         Result rs = result.copy();
         rs.success = true;
         MainActivity m = (MainActivity) mContext;
-
-
         m.setBackground(rs.params);
         App21Result(rs);
 
@@ -262,8 +263,9 @@ public class App21 {
     void SET_BADGE(final Result result ) {
         Result rs = result.copy();
         rs.success = true;
-//        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(mContext.getApplicationContext(), "channel_id").setNumber(10);
-//        ShortcutBadger.applyCount(mContext.getApplicationContext(), 10);
+        //ShortcutBadger.applyCount(mContext.getApplicationContext(), badgeCount);
+        NotificationManager nMgr = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+        nMgr.cancelAll();
         App21Result(rs);
     }
 

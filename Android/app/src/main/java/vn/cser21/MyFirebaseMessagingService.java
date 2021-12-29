@@ -41,62 +41,64 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         // message, here is where that should be initiated. See sendNotification method below.
         RemoteMessage.Notification notification = remoteMessage.getNotification();
         Map<String, String> data = remoteMessage.getData();
-        int badgeCount = Integer.parseInt(data.get("badge").toString());
+//        int badgeCount = Integer.parseInt(data.get("badge").toString());
+//        Log.d("Firebase", "token " + data.toString());
+//        try {
+//            if(remoteMessage.getData().size() > 0) {
+//                ShortcutBadger.applyCount(getApplicationContext(), badgeCount);
+//            }
+//        } catch (Exception e) {
+//            Log.e("TAG", "onMessageReceived: ", e);
+//        }
+        //ShortcutBadger.applyCount(getApplicationContext(), 0);
+        //ShortcutBadger.applyCount(getApplicationContext(), badgeCount);
 
+        // vì mình đổi key json rồi nên giờ chỉ cần truyền data vào để lấy
+        sendNotification(data);
+    }
+
+
+    public static Bitmap getImageUrl(String _url) {
         try {
-            if(remoteMessage.getData().size() > 0) {
-                ShortcutBadger.applyCount(getApplicationContext(), badgeCount);
-            }
-        } catch (Exception e) {
-            Log.e("TAG", "onMessageReceived: ", e);
-        }
-        if(remoteMessage.getNotification() != null) {
-            ShortcutBadger.applyCount(getApplicationContext(), badgeCount);
-        }
-
-        sendNotification(notification, data);
-    }
-
-
-    public static Bitmap getImageUrl(String _url){
-        try{
             URL url = new URL(_url);
-            return   BitmapFactory.decodeStream(url.openConnection().getInputStream());
-        }catch (Exception e){
-            return  null;
+            return BitmapFactory.decodeStream(url.openConnection().getInputStream());
+        } catch (Exception e) {
+            return null;
         }
     }
+
     /**
      * Create and show a custom notification containing the received FCM message.
      *
-     * @param notification FCM notification payload received.
-     * @param data FCM data payload received.
+     * @param data FCM notification payload received.
+     * @param data         FCM data payload received.
      */
-    public void sendNotification(RemoteMessage.Notification notification, Map<String, String> data) {
+    public void sendNotification(Map<String, String> data) {
 
-        String content= notification.getBody();
+        // cái này là lấy nội dung từ trên server trả về
+        String content = data.get("body").toString();
+        String title = data.get("title").toString();
 
         Bitmap icon = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
 
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, vn.cservn2020.MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         //PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
 
-        for(String key : data.keySet()){
+        for (String key : data.keySet()) {
             intent.putExtra(key, data.get(key));
         }
 
 
-
-        PendingIntent pendingIntent =  PendingIntent.getActivity(this, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+// title
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, "channel_id")
-                .setContentTitle(notification.getTitle())
+                .setContentTitle(title)
                 .setContentText(content)
                 .setAutoCancel(true)
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                 .setContentIntent(pendingIntent)
-                .setContentInfo(notification.getTitle())
+                .setContentInfo(title)
                 .setLargeIcon(icon)
                 //.setColor(Color.RED)
                 //.setNumber(badgeCount)
@@ -105,47 +107,46 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 .setSmallIcon(R.mipmap.ic_launcher);
 
 
-
         //data -> customize -> display noti
         //1
         String smallIcon = data.containsKey("smallIcon") ? data.get("smallIcon") : null;
-        if(smallIcon!=null && !"".equals(smallIcon)){
-           //It's not possible to set a custom small icon,
+        if (smallIcon != null && !"".equals(smallIcon)) {
+            //It's not possible to set a custom small icon,
         }
 
         //2
         String largeIconUrl = data.containsKey("largeIcon") ? data.get("largeIcon") : null;
-        if(largeIconUrl!=null && !"".equals(largeIconUrl) &&  !"ic_launcher".equals(largeIconUrl)){
-            Bitmap b= getImageUrl(largeIconUrl);
-            if(b!=null) notificationBuilder.setLargeIcon(b);
+        if (largeIconUrl != null && !"".equals(largeIconUrl) && !"ic_launcher".equals(largeIconUrl)) {
+            Bitmap b = getImageUrl(largeIconUrl);
+            if (b != null) notificationBuilder.setLargeIcon(b);
         }
 
         //3
         String color = data.containsKey("color") ? data.get("color") : null;
-        int _Color=getResources().getColor(R.color.colorPrimary);
-        if(color!=null && !"".equals(color)  ){
-            _Color =Color.parseColor(color);
+        int _Color = getResources().getColor(R.color.colorPrimary);
+        if (color != null && !"".equals(color)) {
+            _Color = Color.parseColor(color);
             notificationBuilder.setColor(_Color);
         }
 
         //4
         String light_color = data.containsKey("light_color") ? data.get("light_color") : null;
-        int color_light =getResources().getColor(R.color.colorPrimary);
-        if(light_color!=null && !"".equals(light_color) ){
-            color_light=  Color.parseColor(light_color);
+        int color_light = getResources().getColor(R.color.colorPrimary);
+        if (light_color != null && !"".equals(light_color)) {
+            color_light = Color.parseColor(light_color);
         }
 
         //5
         String light_onMs = data.containsKey("light_onMs") ? data.get("light_onMs") : null;
-        int onMs= 1000;
-        if(light_onMs!=null && !"".equals(light_onMs) ){
-           onMs = Integer.parseInt(light_onMs);
+        int onMs = 1000;
+        if (light_onMs != null && !"".equals(light_onMs)) {
+            onMs = Integer.parseInt(light_onMs);
         }
 
         //6
-        int offMs=300;
+        int offMs = 300;
         String light_offMs = data.containsKey("light_offMs") ? data.get("light_offMs") : null;
-        if(light_offMs!=null && !"".equals(light_offMs) ){
+        if (light_offMs != null && !"".equals(light_offMs)) {
             offMs = Integer.parseInt(light_offMs);
         }
 
@@ -153,8 +154,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         //7
         String vibrate = data.containsKey("vibrate") ? data.get("vibrate") : null;
-        int _vibrate= Notification.DEFAULT_VIBRATE;
-        if(vibrate!=null && !"".equals(vibrate) && !"DEFAULT_VIBRATE".equals(vibrate) ){
+        int _vibrate = Notification.DEFAULT_VIBRATE;
+        if (vibrate != null && !"".equals(vibrate) && !"DEFAULT_VIBRATE".equals(vibrate)) {
             _vibrate = Integer.parseInt(vibrate);
             notificationBuilder.setDefaults(_vibrate);
         }
@@ -162,9 +163,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         //8
         String sound = data.containsKey("sound") ? data.get("sound") : null;
-        Uri _sound= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        if(sound!=null && !"".equals(sound) && sound !="TYPE_NOTIFICATION" ){
-            _sound=  Uri.parse(sound);
+        Uri _sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        if (sound != null && !"".equals(sound) && sound != "TYPE_NOTIFICATION") {
+            _sound = Uri.parse(sound);
         }
 
 
@@ -174,7 +175,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 URL url = new URL(picture_url);
                 Bitmap bigPicture = BitmapFactory.decodeStream(url.openConnection().getInputStream());
                 notificationBuilder.setStyle(
-                        new NotificationCompat.BigPictureStyle().bigPicture(bigPicture).setSummaryText(notification.getBody())
+                        new NotificationCompat.BigPictureStyle().bigPicture(bigPicture).setSummaryText(content)
                 );
             }
         } catch (IOException e) {
@@ -197,8 +198,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             channel.setVibrationPattern(new long[]{100, 200, 300, 400, 500});
             notificationManager.createNotificationChannel(channel);
         }
-        Random notification_id = new Random();
-        notificationManager.notify(notification_id.nextInt(100), notificationBuilder.build());
+        // muốn tạo nhiều notif thì phải cho thằng notification manager noti đến nhiều channel,
+        // không được trùng nhau
+        // vì vậy hàm new Random().nextInt() >> để tạo ra 1 channel ngẫu nhiên
+        notificationManager.notify(new Random().nextInt(), notificationBuilder.build());
     }
 
 }

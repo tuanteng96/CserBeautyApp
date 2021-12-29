@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width initial-scale=1.0 maximum-scale=1.0 user-scalable=yes" />
     <title></title>
     <meta http-equiv="Content-Language" content="vi" />
-    
-    <link rel="stylesheet" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="https://cser.vn/app2021/css/app.css" />
     <style type="text/css">
         *, ::after, ::before {
             box-sizing: border-box;
@@ -26,7 +25,7 @@
         html, body {
             height: 100%;
             width: 100%;
-            background-color: transparent;
+            background-color: #000;
             overflow:hidden
         }
         
@@ -92,11 +91,12 @@
             window.ANDROID && ANDROID.NoBack(true);
             document.getElementById('ANDROID_ONBACK_MESS').style.display = 'none';
         }
+        
+        var NEW_APP = true;
 
     </script>
 </head>
 <body>
-
     <div id="preload">
         <div class="progress-logo">
             <img src="https://cser.vn/app/images/logo-app.png">
@@ -134,7 +134,7 @@
                     preload.remove();
                 }
 
-            }, 300);Ï
+            }, 300);
         }
         
         var PREV_ERROR = false;
@@ -264,7 +264,8 @@
             }
             function init(script) {
                 /* clearTimeout(showLoaderInv); */
-                if (!isShowLoader) {
+                __embedJs(script);
+                /* if (!isShowLoader) {
                     __embedJs(script);
 
                 } else {
@@ -273,7 +274,7 @@
                         __embedJs(script);
 
                     }, 1000)
-                }
+                } */
 
 
             }
